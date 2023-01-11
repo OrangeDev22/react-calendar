@@ -15,9 +15,8 @@ import {
   isSameDay,
   parseISO,
 } from "date-fns";
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import cc from "classcat";
-import dayjs from "dayjs";
 import { meetingType } from "../../constants";
 
 type Props = {
@@ -145,62 +144,5 @@ function CalendarComponent({ meetings, onItemClick }: Props) {
     </div>
   );
 }
-
-const RequriesActionItemsList = ({ items }: { items: any[] }) => {
-  if (!items || items.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="bg-white w-full text-center">
-      <div className="px-8">
-        {items.map((item, index) => {
-          const letter = item.Letters[0];
-          const today = dayjs(new Date().toUTCString());
-          const expiresAt = letter?.waiting_expired_at;
-          const difference = expiresAt
-            ? today.diff(dayjs(expiresAt), "days")
-            : null;
-
-          return (
-            <Fragment key={`requires-action-item-card-${index}`}>
-              <div className="flex space-evenly font-bold hover:cursor-pointer">
-                <div className="flex gap-3">
-                  <div>{item.account_name}</div>
-                  <div className="text-gray-600">|</div>
-                </div>
-
-                {difference !== null && (
-                  <div
-                    className={cc([
-                      "ml-auto text-primary",
-                      { "text-green-600": difference >= 0 },
-                      { "text-red-600": difference < 0 },
-                      ``,
-                    ])}
-                  >{`${difference} ${
-                    +difference.toString().replace("-", "") > 1 ? "days" : "day"
-                  }`}</div>
-                )}
-              </div>
-
-              {/* {!!item.dispute_round &&
-                item.status !== CreditItemStatus_Enum.AccountFixed &&
-                item.status !== CreditItemStatus_Enum.AccountDeleted && (
-                  <>
-                    <div className="text-left text-orange-600 font-bold">{`Round #${item.dispute_round}`}</div>
-                  </>
-                )} */}
-
-              {index < items.length - 1 && (
-                <hr className="border-gray-500 my-3" />
-              )}
-            </Fragment>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 export default React.memo(CalendarComponent);
